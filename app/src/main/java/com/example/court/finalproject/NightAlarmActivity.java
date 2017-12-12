@@ -38,6 +38,7 @@ public class NightAlarmActivity extends AppCompatActivity implements AdapterView
     ArrayList<String> arrayList;
     CharSequence[] combinedArray;
     int choose_sound;
+    boolean alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,8 @@ public class NightAlarmActivity extends AppCompatActivity implements AdapterView
         alarm_on.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alarm = true;
+
                 // Set calendar
                 calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
                 calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
@@ -126,6 +129,7 @@ public class NightAlarmActivity extends AppCompatActivity implements AdapterView
         alarm_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alarm = false;
                 // Display cancellation
                 set_alarm_text("Alarm off!");
 
@@ -154,40 +158,44 @@ public class NightAlarmActivity extends AppCompatActivity implements AdapterView
         snooze_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Display cancellation
-                set_alarm_text("Alarm has been snoozed! Snooze time set to " + numSno + "mins.");
+                if (alarm) {
+                    // Display cancellation
+                    set_alarm_text("Alarm has been snoozed! Snooze time set to " + numSno + "mins.");
 
-                // Tells clock that you pressed "alarm off" button
-                alarm_receiver.putExtra("extra", "alarm off");
+                    // Tells clock that you pressed "alarm off" button
+                    alarm_receiver.putExtra("extra", "alarm off");
 
-                // Tells clock which sound you selected from spinner
-                // Prevents crash from Null Pointer Exception
-                alarm_receiver.putExtra("sound_choice", choose_sound);
+                    // Tells clock which sound you selected from spinner
+                    // Prevents crash from Null Pointer Exception
+                    alarm_receiver.putExtra("sound_choice", choose_sound);
 
-                // Cancel alarm, stop ringtone
-                try {
-                    alarm_manager.cancel(pending_intent);
-                    sendBroadcast(alarm_receiver);
+                    // Cancel alarm, stop ringtone
+                    try {
+                        alarm_manager.cancel(pending_intent);
+                        sendBroadcast(alarm_receiver);
 
-                } catch (NullPointerException e) {
-                    Log.e("Alarm has not been set ", "and user pressed alarm snooze");
+                    } catch (NullPointerException e) {
+                        Log.e("Alarm has not been set ", "and user pressed alarm snooze");
+                    }
+
+                    // Snooze for certain amount of minutes and then plays tone again.
+                    alarm_receiver.putExtra("extra", "alarm on");
+
+                    // Tells clock which sound you selected from spinner
+                    alarm_receiver.putExtra("sound_choice", choose_sound);
+                    Log.e("The sound id is ", String.valueOf(choose_sound));
+
+
+                    pending_intent = PendingIntent.getBroadcast(NightAlarmActivity.this, 0, alarm_receiver,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+                    long currentTimeMillis = System.currentTimeMillis();
+                    long nextUpdateTimeMillis = currentTimeMillis + numSno * DateUtils.MINUTE_IN_MILLIS;
+
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdateTimeMillis, pending_intent);
+                } else {
+                    Toast.makeText(NightAlarmActivity.this, "No alarm has been set!", Toast.LENGTH_SHORT).show();
                 }
-
-                // Snooze for certain amount of minutes and then plays tone again.
-                alarm_receiver.putExtra("extra", "alarm on");
-
-                // Tells clock which sound you selected from spinner
-                alarm_receiver.putExtra("sound_choice", choose_sound);
-                Log.e("The sound id is ", String.valueOf(choose_sound));
-
-
-                pending_intent = PendingIntent.getBroadcast(NightAlarmActivity.this, 0, alarm_receiver,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-                long currentTimeMillis = System.currentTimeMillis();
-                long nextUpdateTimeMillis = currentTimeMillis + numSno * DateUtils.MINUTE_IN_MILLIS;
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdateTimeMillis, pending_intent);
             }
         });
 

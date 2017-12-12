@@ -161,6 +161,7 @@ public class RingtoneService extends Service {
         } else if (sound_number == 10) {
             media_song = MediaPlayer.create(this, R.raw.sms_delfino);
             media_song.start();
+            // Must upload the songs from the SD card for these to work, functional if /Music/[SONGNAME].[EXTENSION]
         }else if (sound_number == 11) {
             media_song = MediaPlayer.create(this, Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/Music/Pork Soda.mp3"));
             media_song.start();
