@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TimePicker
+        android:id="@+id/timePicker1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar2"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/night_background"/>
+
+    <TextView
+        android:id="@+id/update_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_isAlarmSet"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/timePicker1"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/alarm_on1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_setAlarm"
+        android:clickable="true"
+        android:layout_below="@+id/update_text1"
+        android:layout_toStartOf="@+id/alarm_off1" />
+
+    <Button
+        android:id="@+id/alarm_off1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_alarmOff"
+        android:clickable="true"
+        android:layout_below="@+id/update_text1"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/snooze_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/update_text1"
+        android:layout_toEndOf="@+id/alarm_off1"
+        android:text="Snooze" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alarm_off1"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/backToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_backToMain"
+        android:clickable="true"
+        android:layout_below="@+id/spinner1"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp" />
+
+    <Button
+        android:id="@+id/Snooze_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner1"
+        android:layout_toEndOf="@+id/backToMain"
+        android:clickable="true"
+        android:text="Snooze Settings" />
+</RelativeLayout>
